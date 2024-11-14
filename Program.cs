@@ -10,6 +10,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContextFactory<Context>(o => o.UseSqlServer("Name=SqlConStr"));
 
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 
