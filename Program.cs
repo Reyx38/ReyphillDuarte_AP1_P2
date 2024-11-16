@@ -1,3 +1,4 @@
+using BlazorBootstrap;
 using Microsoft.EntityFrameworkCore;
 using ReyphillDuarte_AP1_P2.Components;
 using ReyphillDuarte_AP1_P2.DAL;
@@ -10,8 +11,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContextFactory<Context>(o => o.UseSqlServer("Name=SqlConStr"));
 
-builder.Services.AddBlazorBootstrap();
-
+builder.Services.AddSingleton<ToastService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
