@@ -1,6 +1,7 @@
 using BlazorBootstrap;
 using Microsoft.EntityFrameworkCore;
 using ReyphillDuarte_AP1_P2.Components;
+using ReyphillDuarte_AP1_P2.Services;
 using ReyphillDuarte_AP1_P2.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContextFactory<Context>(o => o.UseSqlServer("Name=SqlConStr"));
+builder.Services.AddScoped<ModeloService>();
 
 builder.Services.AddSingleton<ToastService>();
 var app = builder.Build();
