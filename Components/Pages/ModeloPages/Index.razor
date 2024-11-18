@@ -1,13 +1,16 @@
 ﻿@page "/Modelo/Index"
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
+@inject ModeloService ModeloService
+@inject ToastService Toaste
+@*<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />*@
+<PageTitle>Registro</PageTitle>
 
-<PageTitle>Index</PageTitle>
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header space-between">
-            <h5 class="card-title">Registro Cobros</h5>
-            <a href="/Cobros/Create" class="btn btn-primary">
+            <h5 class="card-title">Registro </h5>
+            <a href="/Modelo/Create" class="btn btn-primary">
                 <span class="bi bi-plus-square mt-3"></span> Crear
             </a>
         </div>
@@ -33,68 +36,122 @@
             <div class="row align-items-center">
                 @*filtro*@
                 <div class="col-3">
-                    @* <InputSelect class="form-select">
+                    <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
                         <option value="Deudor">Deudor</option>
                         <option value="Fecha">Fecha</option>
-                    </InputSelect> *@
+                    </InputSelect>
                 </div>
 
                 @*Busqueda*@
                 <div class="col-4">
                     <div class="input-group">
-                        <input class="form-control"  placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary bi bi-search"></button>
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
                     </div>
                 </div>
 
 
                 @*Restablecer*@
                 <div class="col-3">
-                    <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise">
+                    <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise"
+                        @onclick="Restablecer">
                     </button>
                 </div>
-         
+
+                @*FiltroFecha*@
+                <div class="row mt-3">
+
+                    @*Desde*@
+                    <div class="col-3">
+                        <label class="col-form-label"><strong>Desde</strong></label>
+                        <InputDate class="form-control" @bind-Value="Desde"></InputDate>
+                    </div>
+
+                    @*Hasta*@
+                    <div class="col-3">
+                        <label class="col-form-label"><strong>Hasta</strong></label>
+                        <div class="input-group">
+                            <InputDate class="form-control" @bind-Value="Hasta"></InputDate>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
             <table class="table table-hover text-center mt-3">
                 <thead class="table  table-striped text-black ">
                     <tr>
-                        <th><strong>CobroId</strong></th>
-                        <th><strong>Fecha</strong></th>
+                        <th><strong>EntidadId</strong></th>
                         <th><strong>Deudor</strong></th>
                         <th><strong>Monto</strong></th>
                         <th><strong>Opciones</strong></th>
                     </tr>
                 </thead>
-                @* <tbody>
+                <tbody>
                     @foreach (var cobro in ListaCobros)
                     {
                         <tr>
-                            <td> @cobro.CobroId</td>
-                            <td> @cobro.Fecha.ToShortDateString()</td>
-                            <td> @cobro.Deudor.Nombres</td>
-                            <td> @cobro.Monto.ToString("N2")</td>
+                            <td> @cobro.EntidadId</td>
+                            <td> @cobro.Nombres</td>
+                            <td> @cobro.Sueldo.ToString("N2")</td>
 
                             <td class="text-center">
-                                <a href="/Cobro/Edit/@cobro.CobroId"
-                                   class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/Cobro/Delete/@cobro.CobroId" class="btn btn-outline-danger bi bi-trash"></a>
+                                <a href="/Modelo/Edit/@cobro.EntidadId"
+                                    class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                <a href="/Modelo/Delete/@cobro.EntidadId" class="btn btn-outline-danger bi bi-trash"></a>
                             </td>
                         </tr>
                     }
-                </tbody> *@
+                </tbody>
             </table>
         </div>
-       @*  <div class="card-footer space-between">
+        <div class="card-footer space-between">
             <label class="ms-3"><strong>Cantidad:</strong> @ListaCobros.Count</label>
             <div class="col-5">
-                <label class="ms-5"><strong>Total:</strong> $@ListaCobros.Sum(p => p.Monto).ToString("N2")</label>
+                <label class="ms-5"><strong>Total:</strong> $@ListaCobros.Sum(p => p.Sueldo).ToString("N2")</label>
             </div>
-        </div> *@
+        </div>
     </div>
 </div>
 
 @code {
+    public List<Modelo_Examen> ListaCobros { get; set; } = new List<Modelo_Examen>();
+
+    public string Filtro { get; set; } = string.Empty;
+    public string ValorFiltro { get; set; } = string.Empty;
+
+    public DateTime? Desde { get; set; }
+
+    public DateTime? Hasta { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        @*ListaCobros = await ModeloService.Listar(c => c.EntidadId > 0);*@
+        Desde = null;
+        Hasta = null;
+    }
+    private async Task Buscar()
+    {
+        if (Filtro == "Fecha")
+            ListaCobros = await ModeloService
+            .Listar(f => f.Fecha >= Desde && f.Fecha <= Hasta);
+
+        else if (ValorFiltro.Trim() != "" && Filtro == "Deudor")
+        {
+            ListaCobros = await ModeloService
+            .Listar(p => p.Nombres.ToLower()
+            .Contains(ValorFiltro.ToLower()));
+        }
+    }
+    private async Task Restablecer()
+    {
+        ListaCobros = await ModeloService.Listar(e => e.EntidadId > 0);
+        Filtro = string.Empty;
+        ValorFiltro = string.Empty;
+        Desde = null;
+        Hasta = null;
+    }
 
 }
