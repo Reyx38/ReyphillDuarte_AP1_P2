@@ -7,7 +7,9 @@ public class Modelo_Examen
 	[Key]
 	public int EntidadId { get; set; }
 
-    public string Nombres { get; set; }
+    public string? Nombres { get; set; }
+
+	public DateTime Fecha {  get; set; }
 
     public int Sueldo { get; set; }
 
