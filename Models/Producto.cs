@@ -2,10 +2,10 @@
 
 namespace ReyphillDuarte_AP1_P2.Models
 {
-    public class Articuloss
+    public class Producto
     {
         [Key]
-        public int ArticulosId  { get; set; }
+        public int ProductoId  { get; set; }
 
         public int? Existencia { get; set; }
 

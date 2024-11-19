@@ -22,16 +22,17 @@
             <div class="card-body">
                 <div class="row">
                     <label>Fecha:</label>
-                    <DateInput @bind-Value="Combo.Fecha" />
+                    <DateInput class="form-control" @bind-Value="Combo.Fecha" />
                     <ValidationMessage For="@(() => Combo.Fecha)" />
                 </div>
 
                 <div class="row">
                     <label>Descripcion:</label>
-                    <InputText @bind-Value="Combo.Descripcion" />
+                    <InputText class="form-control"@bind-Value="Combo.Descripcion" />
                     <ValidationMessage For="@(() => Combo.Descripcion)" />
                 </div>
-                    
+				<PickerArticulos
+                    ListaArticulos="ListaArticulos"/>
                 <table class="table table-hover text-center mt-3">
                     <thead class="table  table-striped text-black ">
                         <tr>
@@ -73,11 +74,11 @@
 @code {
     public Combo Combo { get; set; } = new Combo();
     public ComboDetalles Detalles { get; set; } = new ComboDetalles();
-    public List<Articuloss> ListaArticulos { get; set; } =[];
+    public List<Producto> ListaArticulos { get; set; } =[];
 
     protected override async Task OnInitializedAsync()
     {
-        ListaArticulos = await ArticuloService.Listar(c => c.ArticulosId > 0);
+        ListaArticulos = await ArticuloService.Listar(c => c.ProductoId > 0);
 
     }
 

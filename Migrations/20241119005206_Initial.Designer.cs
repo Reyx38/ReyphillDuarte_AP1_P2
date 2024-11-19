@@ -12,7 +12,7 @@ using ReyphillDuarte_AP1_P2.DAL;
 namespace ReyphillDuarte_AP1_P2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241118232524_Initial")]
+    [Migration("20241119005206_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -52,65 +52,6 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                     b.ToTable("ComboDetalles");
                 });
 
-            modelBuilder.Entity("ReyphillDuarte_AP1_P2.Models.Articuloss", b =>
-                {
-                    b.Property<int>("ArticulosId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ArticulosId"));
-
-                    b.Property<float?>("Costo")
-                        .HasColumnType("real");
-
-                    b.Property<string>("Descripcion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Existencia")
-                        .HasColumnType("int");
-
-                    b.Property<float?>("Precio")
-                        .HasColumnType("real");
-
-                    b.HasKey("ArticulosId");
-
-                    b.ToTable("Articulos");
-
-                    b.HasData(
-                        new
-                        {
-                            ArticulosId = 20,
-                            Costo = 30f,
-                            Descripcion = "Bocina",
-                            Existencia = 20,
-                            Precio = 40f
-                        },
-                        new
-                        {
-                            ArticulosId = 50,
-                            Costo = 100f,
-                            Descripcion = "Memoria RAM",
-                            Existencia = 10,
-                            Precio = 150f
-                        },
-                        new
-                        {
-                            ArticulosId = 60,
-                            Costo = 80f,
-                            Descripcion = "Disco duro grafica",
-                            Existencia = 12,
-                            Precio = 130f
-                        },
-                        new
-                        {
-                            ArticulosId = 70,
-                            Costo = 30f,
-                            Descripcion = "Pantalla",
-                            Existencia = 20,
-                            Precio = 40f
-                        });
-                });
-
             modelBuilder.Entity("ReyphillDuarte_AP1_P2.Models.Combo", b =>
                 {
                     b.Property<int>("ComboId")
@@ -133,6 +74,65 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                     b.HasKey("ComboId");
 
                     b.ToTable("Combos");
+                });
+
+            modelBuilder.Entity("ReyphillDuarte_AP1_P2.Models.Producto", b =>
+                {
+                    b.Property<int>("ProductoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductoId"));
+
+                    b.Property<float?>("Costo")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Existencia")
+                        .HasColumnType("int");
+
+                    b.Property<float?>("Precio")
+                        .HasColumnType("real");
+
+                    b.HasKey("ProductoId");
+
+                    b.ToTable("Productos");
+
+                    b.HasData(
+                        new
+                        {
+                            ProductoId = 20,
+                            Costo = 30f,
+                            Descripcion = "Bocina",
+                            Existencia = 20,
+                            Precio = 40f
+                        },
+                        new
+                        {
+                            ProductoId = 50,
+                            Costo = 100f,
+                            Descripcion = "Memoria RAM",
+                            Existencia = 10,
+                            Precio = 150f
+                        },
+                        new
+                        {
+                            ProductoId = 60,
+                            Costo = 80f,
+                            Descripcion = "Disco duro grafica",
+                            Existencia = 12,
+                            Precio = 130f
+                        },
+                        new
+                        {
+                            ProductoId = 70,
+                            Costo = 30f,
+                            Descripcion = "Pantalla",
+                            Existencia = 20,
+                            Precio = 40f
+                        });
                 });
 
             modelBuilder.Entity("RegistroTecnicos.Models.ComboDetalles", b =>

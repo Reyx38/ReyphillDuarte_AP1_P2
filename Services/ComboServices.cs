@@ -91,7 +91,7 @@ public class ComboServices(IDbContextFactory<Context> DbFactory)
         await using var contexto = await DbFactory.CreateDbContextAsync();
         foreach (var item in detalles)
         {
-            var Articulo = await contexto.Articuloss.SingleAsync(p => p.ArticulosId == item.ArticuloId);
+            var Articulo = await contexto.Productos.SingleAsync(p => p.ProductoId == item.ArticuloId);
             if (resta)
             {
                 Articulo.Existencia -= item.Cantidad;
