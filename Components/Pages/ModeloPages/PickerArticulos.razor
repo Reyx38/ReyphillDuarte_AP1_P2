@@ -1,0 +1,59 @@
+﻿<div class="col-auto input-group align-items-center">
+
+	<InputSelect class="form-select" @bind-Value="ArticuloId">
+
+		<option disabled value="0">--- Seleccione un articulo ---</option>
+		@foreach (var articulos in ListaArticulos)
+		{
+			<option value="@articulos.ArticulosId">@articulos.Descripcion -- Existencias (@articulos.Existencia) -- Precio (@articulos.Precio $)</option>
+		}
+
+	</InputSelect>
+
+	<label class="col-form-label input-group-text">Cantidad </label>
+	<InputNumber class="form-control" @bind-Value="Cantidad" placeholder="0.00$"></InputNumber>
+
+	<label class="col-form-label input-group-text">Precio </label>
+	<InputNumber class="form-control" @bind-Value="precio" placeholder="0.00$" readonly disabled></InputNumber>
+	<button type="button" class="btn btn-outline-success bi bi-plus mt-2" @onclick="ElegirArticulo">Agregar detalle</button>
+
+</div>
+
+
+@code {
+	[Parameter]
+	public List<Articuloss> ListaArticulos { get; set; } = [];
+
+	[Parameter]
+	public int ArticuloId { get; set; }
+
+	[Parameter]
+	public int Cantidad { get; set; }
+
+	[Parameter]
+	public float? precio { get; set; }
+
+	[Parameter]
+	public EventCallback<(Articuloss articulo , int cantidad)> ArticuloSeleccionado { get; set; }
+
+	public string? ErrorMensaje { get; set; }
+
+	private async Task ElegirArticulo()
+	{
+		ErrorMensaje = null;
+		if (ArticuloId > 0 )
+		{
+			var Articulo = ListaArticulos.Single(p => ArticuloId == ArticuloId);
+			if (Articulo.Existencia < Cantidad)
+			{
+				ErrorMensaje = "No se encuentran esta cantidad de articulos";
+				return;
+			}
+			await ArticuloSeleccionado.InvokeAsync((Articulo, Cantidad));
+		}
+		else
+		{
+			ErrorMensaje = "No hay un Articulo Seleccionado o la cantidad es cero o menor";
+		}
+	}
+} 

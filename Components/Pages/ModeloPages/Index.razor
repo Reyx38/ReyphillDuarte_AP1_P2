@@ -1,49 +1,43 @@
-﻿@page "/Modelo/Index"
+﻿@page "/Combo/Index"
 @inject NavigationManager navigationManager
 @rendermode InteractiveServer
-@inject ModeloService ModeloService
+@inject ComboServices ComboService
 @inject ToastService Toaste
-@*<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />*@
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 <PageTitle>Registro</PageTitle>
 
 <div class="container">
     <div class="card shadow-lg">
         <div class="card-header space-between">
-            <h5 class="card-title">Registro </h5>
-            <a href="/Modelo/Create" class="btn btn-primary">
+            <h5 class="card-title">Registro Combos</h5>
+            <a href="/Combo/Create" class="btn btn-primary">
                 <span class="bi bi-plus-square mt-3"></span> Crear
             </a>
         </div>
 
         <div class="card-body">
 
-            @*labels*@
             <div class="row">
 
-                @*Filtrar por*@
                 <div class="col-3">
                     <label class="col-form-label"><strong>Filtrar por</strong></label>
                 </div>
 
-                @*ValorFiltro*@
                 <div class="col-4">
                     <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
                 </div>
 
             </div>
 
-            @*Inputs y botones*@
             <div class="row align-items-center">
-                @*filtro*@
                 <div class="col-3">
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Elija una opci&oacute;n</option>
-                        <option value="Deudor">Deudor</option>
+                        <option value="descripcion">Descripcion</option>
                         <option value="Fecha">Fecha</option>
                     </InputSelect>
                 </div>
 
-                @*Busqueda*@
                 <div class="col-4">
                     <div class="input-group">
                         <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
@@ -52,23 +46,19 @@
                 </div>
 
 
-                @*Restablecer*@
                 <div class="col-3">
                     <button type="button" class="btn btn-outline-secondary bi bi-arrow-counterclockwise"
                         @onclick="Restablecer">
                     </button>
                 </div>
 
-                @*FiltroFecha*@
                 <div class="row mt-3">
 
-                    @*Desde*@
                     <div class="col-3">
                         <label class="col-form-label"><strong>Desde</strong></label>
                         <InputDate class="form-control" @bind-Value="Desde"></InputDate>
                     </div>
 
-                    @*Hasta*@
                     <div class="col-3">
                         <label class="col-form-label"><strong>Hasta</strong></label>
                         <div class="input-group">
@@ -83,24 +73,27 @@
             <table class="table table-hover text-center mt-3">
                 <thead class="table  table-striped text-black ">
                     <tr>
-                        <th><strong>EntidadId</strong></th>
-                        <th><strong>Deudor</strong></th>
-                        <th><strong>Monto</strong></th>
+                        <th><strong>ComboId</strong></th>
+                        <th><strong>Descripcion</strong></th>
+                        <th><strong>Fecha</strong></th>
+                        <th><strong>Vendido</strong></th>
                         <th><strong>Opciones</strong></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var cobro in ListaCobros)
+                    @foreach (var combo in ListaCombos)
                     {
                         <tr>
-                            <td> @cobro.EntidadId</td>
-                            <td> @cobro.Nombres</td>
-                            <td> @cobro.Sueldo.ToString("N2")</td>
+                            <td> @combo.ComboId</td>
+                            <td> @combo.Descripcion</td>
+                            <td> @combo.Fecha</td>
+                            <td> @combo.Vendido.ToString()</td>
+
 
                             <td class="text-center">
-                                <a href="/Modelo/Edit/@cobro.EntidadId"
+                                <a href="/Combo/Edit/@combo.ComboId"
                                     class="btn btn-outline-primary bi bi-pencil-square"></a>
-                                <a href="/Modelo/Delete/@cobro.EntidadId" class="btn btn-outline-danger bi bi-trash"></a>
+                                <a href="/Combo/Delete/@combo.ComboId" class="btn btn-outline-danger bi bi-trash"></a>
                             </td>
                         </tr>
                     }
@@ -108,16 +101,15 @@
             </table>
         </div>
         <div class="card-footer space-between">
-            <label class="ms-3"><strong>Cantidad:</strong> @ListaCobros.Count</label>
+            <label class="ms-3"><strong>Cantidad:</strong> @ListaCombos.Count</label>
             <div class="col-5">
-                <label class="ms-5"><strong>Total:</strong> $@ListaCobros.Sum(p => p.Sueldo).ToString("N2")</label>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-    public List<Modelo_Examen> ListaCobros { get; set; } = new List<Modelo_Examen>();
+    public List<Combo> ListaCombos { get; set; } = new List<Combo>();
 
     public string Filtro { get; set; } = string.Empty;
     public string ValorFiltro { get; set; } = string.Empty;
@@ -128,26 +120,26 @@
 
     protected override async Task OnInitializedAsync()
     {
-        @*ListaCobros = await ModeloService.Listar(c => c.EntidadId > 0);*@
+        ListaCombos = await ComboService.Listar(c => c.ComboId > 0);
         Desde = null;
         Hasta = null;
     }
     private async Task Buscar()
     {
-        if (Filtro == "Fecha")
-            ListaCobros = await ModeloService
+        if (Filtro == "fecha")
+            ListaCombos = await ComboService
             .Listar(f => f.Fecha >= Desde && f.Fecha <= Hasta);
 
-        else if (ValorFiltro.Trim() != "" && Filtro == "Deudor")
+        else if (ValorFiltro.Trim() != "" && Filtro == "descripcion")
         {
-            ListaCobros = await ModeloService
-            .Listar(p => p.Nombres.ToLower()
+            ListaCombos = await ComboService
+            .Listar(p => p.Descripcion.ToLower()
             .Contains(ValorFiltro.ToLower()));
         }
     }
     private async Task Restablecer()
     {
-        ListaCobros = await ModeloService.Listar(e => e.EntidadId > 0);
+        ListaCombos = await ComboService.Listar(e => e.ComboId > 0);
         Filtro = string.Empty;
         ValorFiltro = string.Empty;
         Desde = null;
