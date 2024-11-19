@@ -1,14 +1,100 @@
-﻿@page "/counter"
-@rendermode InteractiveServer
+﻿@page "/Combo/Create"
+@using RegistroTecnicos.Models
 @inject ToastService Toast
+@rendermode InteractiveServer 
+@inject ComboServices ComboService
+@inject ArticuloService ArticuloService
+@inject NavigationManager navigation
 
-<h3>Create</h3>
+<PageTitle>Crear combo</PageTitle>
+
+<EditForm Model="@Combo" OnValidSubmit="Guardar">
+   <DataAnnotationsValidator />
+
 <Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
-@code {
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Crear nuevos combos</h2>
+            </div>
+            
+            <div class="card-body">
+                <div class="row">
+                    <label>Fecha:</label>
+                    <DateInput @bind-Value="Combo.Fecha" />
+                    <ValidationMessage For="@(() => Combo.Fecha)" />
+                </div>
 
-    private void IncrementCount()
+                <div class="row">
+                    <label>Descripcion:</label>
+                    <InputText @bind-Value="Combo.Descripcion" />
+                    <ValidationMessage For="@(() => Combo.Descripcion)" />
+                </div>
+                    
+                <table class="table table-hover text-center mt-3">
+                    <thead class="table  table-striped text-black ">
+                        <tr>
+                            <th><strong>Articulo Id</strong></th>
+                            <th><strong>Cantidad</strong></th>
+                            <th><strong>Precio</strong></th>
+                            <th><strong>Opciones</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detalles in Combo.Detalles)
+                        {
+                            <tr>
+                                <td> @detalles.DetallesId</td>
+                                <td> @detalles.Cantidad</td>
+                                <td> @detalles.Precio.ToString("N2")</td>
+
+                                <td class="text-center">
+                                    <button @onclick="RemoverDetalle" class="btn btn-danger bi bi-trash">Remover</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+          <div class="card-footer">
+                <div class="Botones_agregar">
+                <a href="/Combo/Index" class="btn btn-info bi bi-arrow-left-square "> Volver</a>
+                <button type="submit" class="btn btn-success bi bi-floppy"> Guardar</button>
+                </div>
+          </div>
+
+        </div>
+    </div>
+
+
+</EditForm>
+
+@code {
+    public Combo Combo { get; set; } = new Combo();
+    public ComboDetalles Detalles { get; set; } = new ComboDetalles();
+    public List<Articuloss> ListaArticulos { get; set; } =[];
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaArticulos = await ArticuloService.Listar(c => c.ArticulosId > 0);
+
+    }
+
+    public async Task AgregarDetalle()
+    {
+        
+    }
+    public async Task RemoverDetalle(){}
+
+    public async Task Guardar()
     {
         Toast.Notify(new(ToastType.Success, $"El loco lo que sabe."));
+
     }
 }
+
+
+    
+
+ 
