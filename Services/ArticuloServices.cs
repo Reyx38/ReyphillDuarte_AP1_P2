@@ -15,6 +15,7 @@ namespace ReyphillDuarte_AP1_P2.Services
                 .AsNoTracking()
                 .Where(criterio)
                 .ToListAsync();
+
         }
     }
 }
