@@ -38,19 +38,7 @@
 
 	private async Task ElegirArticulo()
 	{
-		if (ArticuloId > 0 )
-		{
-			var Articulo = ListaArticulos.Single(p => p.ProductoId == ArticuloId);
-			if (Articulo < Cantidad)
-			{
-				ErrorMensaje = "No se encuentran esta cantidad de articulos";
-				return;
-			}
-			await ArticuloSeleccionado.InvokeAsync((Articulo, Cantidad));
-		}
-		else
-		{
-			ErrorMensaje = "No hay un Articulo Seleccionado o la cantidad es cero o menor";
-		}
+	
+		
 	}
 } 
