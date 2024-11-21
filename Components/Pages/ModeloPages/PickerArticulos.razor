@@ -1,4 +1,7 @@
-﻿<div class="col-auto input-group align-items-center">
+﻿@inject ToastService Toast
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
+
+<div class="col-auto input-group align-items-center">
 
 	<InputSelect class="form-select" @bind-Value="ArticuloId">
 
@@ -31,14 +34,26 @@
 	public int Cantidad { get; set; }
 
 	[Parameter]
-	public float? precio { get; set; }
+	public double precio { get; set; }
 
 	[Parameter]
 	public EventCallback<(Producto articulo, int cantidad)> ArticuloSeleccionado { get; set; }
 
 	private async Task ElegirArticulo()
 	{
-	
-		
+		if (ArticuloId > 0 && Cantidad > 0 )
+		{
+			var Articulo = ListaArticulos.Single(p => p.ProductoId == ArticuloId);
+			if (Articulo.Existencia < Cantidad)
+			{
+				Toast.Notify(new(ToastType.Danger, $"La cantidad agregada es mayor a la existencia del articulo"));
+				return;
+			}
+			await ArticuloSeleccionado.InvokeAsync((Articulo, Cantidad));
+		}
+		else
+		{
+			Toast.Notify(new(ToastType.Danger, $"Seleccione un articulo o Agregue una cantidad mayor a cero"));
+		}
 	}
 } 
