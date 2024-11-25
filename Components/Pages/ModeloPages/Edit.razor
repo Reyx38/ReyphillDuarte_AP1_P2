@@ -31,6 +31,16 @@
                     <InputText class="form-control" @bind-Value="Combo.Descripcion" />
                     <ValidationMessage For="@(() => Combo.Descripcion)" />
                 </div>
+
+                 <div class="row">
+                    <label class="form-label">Precio </label>
+	                <InputNumber class="form-control" @bind-Value="@Combo.precio" placeholder="0.00$" readonly disabled></InputNumber>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>¿Vendido?</strong></label>
+                    <InputCheckbox class="form-check-input" @bind-Value="@Combo.Vendido" />
+                </div>
+
                 <div class="border border-success p-3 mt-3">
 
                     <PickerArticulos ListaArticulos="ListaArticulos"
@@ -43,6 +53,7 @@
                         <thead class="table  table-striped text-black ">
                             <tr>
                                 <th><strong>Articulo Id</strong></th>
+                                <th><strong>Descripcion</strong></th>
                                 <th><strong>Cantidad</strong></th>
                                 <th><strong>Precio</strong></th>
                                 <th><strong>Opciones</strong></th>
@@ -53,6 +64,7 @@
                             {
                                 <tr>
                                     <td> @detalles.ArticuloId</td>
+                                    <td> @detalles.Articulo?.Descripcion</td>
                                     <td> @detalles.Cantidad</td>
                                     <td> @detalles.Precio</td>
 
@@ -103,13 +115,14 @@
         }
         else
         {
-            var TrabajosDetalle = new ComboDetalles
+            var ArticuloDetalle = new ComboDetalles
                 {
                     ArticuloId = selection.articulos.ProductoId,
                     Cantidad = selection.cantidad,
                     Precio = selection.articulos.Precio,
                 };
-            Combo.Detalles.Add(TrabajosDetalle);
+            Combo.Detalles.Add(ArticuloDetalle);
+            Combo.precio += ArticuloDetalle.Precio * ArticuloDetalle.Cantidad;
             Detalles = new ComboDetalles();
             await Task.CompletedTask;
             Toast.Notify(new(ToastType.Success, $"Se agrego el componente correctamente"));

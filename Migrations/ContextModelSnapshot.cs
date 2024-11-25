@@ -42,9 +42,14 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                     b.Property<double>("Precio")
                         .HasColumnType("float");
 
+                    b.Property<int?>("Producto")
+                        .HasColumnType("int");
+
                     b.HasKey("DetallesId");
 
                     b.HasIndex("ComboId");
+
+                    b.HasIndex("Producto");
 
                     b.ToTable("ComboDetalles");
                 });
@@ -67,6 +72,9 @@ namespace ReyphillDuarte_AP1_P2.Migrations
 
                     b.Property<bool>("Vendido")
                         .HasColumnType("bit");
+
+                    b.Property<double>("precio")
+                        .HasColumnType("float");
 
                     b.HasKey("ComboId");
 
@@ -140,6 +148,12 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                         .HasForeignKey("ComboId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ReyphillDuarte_AP1_P2.Models.Producto", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("Producto");
+
+                    b.Navigation("Articulo");
                 });
 
             modelBuilder.Entity("ReyphillDuarte_AP1_P2.Models.Combo", b =>

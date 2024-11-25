@@ -12,8 +12,8 @@ using ReyphillDuarte_AP1_P2.DAL;
 namespace ReyphillDuarte_AP1_P2.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20241119005206_Initial")]
-    partial class Initial
+    [Migration("20241125174416_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,9 +45,14 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                     b.Property<double>("Precio")
                         .HasColumnType("float");
 
+                    b.Property<int?>("Producto")
+                        .HasColumnType("int");
+
                     b.HasKey("DetallesId");
 
                     b.HasIndex("ComboId");
+
+                    b.HasIndex("Producto");
 
                     b.ToTable("ComboDetalles");
                 });
@@ -71,6 +76,9 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                     b.Property<bool>("Vendido")
                         .HasColumnType("bit");
 
+                    b.Property<double>("precio")
+                        .HasColumnType("float");
+
                     b.HasKey("ComboId");
 
                     b.ToTable("Combos");
@@ -84,17 +92,18 @@ namespace ReyphillDuarte_AP1_P2.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductoId"));
 
-                    b.Property<float?>("Costo")
-                        .HasColumnType("real");
+                    b.Property<double>("Costo")
+                        .HasColumnType("float");
 
                     b.Property<string>("Descripcion")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Existencia")
+                    b.Property<int>("Existencia")
                         .HasColumnType("int");
 
-                    b.Property<float?>("Precio")
-                        .HasColumnType("real");
+                    b.Property<double>("Precio")
+                        .HasColumnType("float");
 
                     b.HasKey("ProductoId");
 
@@ -104,34 +113,34 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                         new
                         {
                             ProductoId = 20,
-                            Costo = 30f,
+                            Costo = 30.0,
                             Descripcion = "Bocina",
                             Existencia = 20,
-                            Precio = 40f
+                            Precio = 40.0
                         },
                         new
                         {
                             ProductoId = 50,
-                            Costo = 100f,
+                            Costo = 100.0,
                             Descripcion = "Memoria RAM",
                             Existencia = 10,
-                            Precio = 150f
+                            Precio = 150.0
                         },
                         new
                         {
                             ProductoId = 60,
-                            Costo = 80f,
+                            Costo = 80.0,
                             Descripcion = "Disco duro grafica",
                             Existencia = 12,
-                            Precio = 130f
+                            Precio = 130.0
                         },
                         new
                         {
                             ProductoId = 70,
-                            Costo = 30f,
+                            Costo = 30.0,
                             Descripcion = "Pantalla",
                             Existencia = 20,
-                            Precio = 40f
+                            Precio = 40.0
                         });
                 });
 
@@ -142,6 +151,12 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                         .HasForeignKey("ComboId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ReyphillDuarte_AP1_P2.Models.Producto", "Articulo")
+                        .WithMany()
+                        .HasForeignKey("Producto");
+
+                    b.Navigation("Articulo");
                 });
 
             modelBuilder.Entity("ReyphillDuarte_AP1_P2.Models.Combo", b =>

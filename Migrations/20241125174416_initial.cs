@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ReyphillDuarte_AP1_P2.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -21,6 +21,7 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    precio = table.Column<double>(type: "float", nullable: false),
                     Vendido = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -34,10 +35,10 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                 {
                     ProductoId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Existencia = table.Column<int>(type: "int", nullable: true),
-                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Precio = table.Column<float>(type: "real", nullable: true),
-                    Costo = table.Column<float>(type: "real", nullable: true)
+                    Existencia = table.Column<int>(type: "int", nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Precio = table.Column<double>(type: "float", nullable: false),
+                    Costo = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,6 +53,7 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ComboId = table.Column<int>(type: "int", nullable: false),
                     ArticuloId = table.Column<int>(type: "int", nullable: false),
+                    Producto = table.Column<int>(type: "int", nullable: true),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<double>(type: "float", nullable: false)
                 },
@@ -64,6 +66,11 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                         principalTable: "Combos",
                         principalColumn: "ComboId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ComboDetalles_Productos_Producto",
+                        column: x => x.Producto,
+                        principalTable: "Productos",
+                        principalColumn: "ProductoId");
                 });
 
             migrationBuilder.InsertData(
@@ -71,16 +78,21 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                 columns: new[] { "ProductoId", "Costo", "Descripcion", "Existencia", "Precio" },
                 values: new object[,]
                 {
-                    { 20, 30f, "Bocina", 20, 40f },
-                    { 50, 100f, "Memoria RAM", 10, 150f },
-                    { 60, 80f, "Disco duro grafica", 12, 130f },
-                    { 70, 30f, "Pantalla", 20, 40f }
+                    { 20, 30.0, "Bocina", 20, 40.0 },
+                    { 50, 100.0, "Memoria RAM", 10, 150.0 },
+                    { 60, 80.0, "Disco duro grafica", 12, 130.0 },
+                    { 70, 30.0, "Pantalla", 20, 40.0 }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ComboDetalles_ComboId",
                 table: "ComboDetalles",
                 column: "ComboId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComboDetalles_Producto",
+                table: "ComboDetalles",
+                column: "Producto");
         }
 
         /// <inheritdoc />
@@ -90,10 +102,10 @@ namespace ReyphillDuarte_AP1_P2.Migrations
                 name: "ComboDetalles");
 
             migrationBuilder.DropTable(
-                name: "Productos");
+                name: "Combos");
 
             migrationBuilder.DropTable(
-                name: "Combos");
+                name: "Productos");
         }
     }
 }

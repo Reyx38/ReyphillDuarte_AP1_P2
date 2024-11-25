@@ -16,6 +16,8 @@ public class Combo
 
     [Required(ErrorMessage = "Campo obligatorio")]
     public DateTime Fecha {  get; set; } = DateTime.Now;
+
+    public double precio { get; set; }   
    
     public bool Vendido { get; set; } = false;
 

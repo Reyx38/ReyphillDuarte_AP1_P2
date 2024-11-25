@@ -31,6 +31,17 @@
                     <InputText class="form-control"@bind-Value="Combo.Descripcion" />
                     <ValidationMessage For="@(() => Combo.Descripcion)" />
                 </div>
+                <div class="row">
+                    <label class="col-form-label input-group-text">Precio </label>
+	                <InputNumber class="form-control" @bind-Value="@Combo.precio" placeholder="0.00$" readonly disabled></InputNumber>
+                </div>
+
+                 <div class="mb-3">
+                    <label for="Vendido" class="form-label"><strong>¿Vendido?</strong></label>
+                    <InputCheckbox class="form-check-input" @bind-Value="@Combo.Vendido" />
+                </div>
+
+
                 <div class="border border-success p-3 mt-3">
 
 				<PickerArticulos
@@ -83,6 +94,7 @@
     public Combo Combo { get; set; } = new Combo();
     public ComboDetalles Detalles { get; set; } = new ComboDetalles();
     public List<Producto> ListaArticulos { get; set; } =[];
+    public string descripcion { get; set; } = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,16 +113,17 @@
         }
         else
         {
-            var TrabajosDetalle = new ComboDetalles
+            var ArticuloDetalle = new ComboDetalles
                 {
                     ArticuloId = selection.articulos.ProductoId,
                     Cantidad = selection.cantidad,
                     Precio = selection.articulos.Precio,
                 };
-            Combo.Detalles.Add(TrabajosDetalle);
+            Combo.Detalles.Add(ArticuloDetalle);
+            Combo.precio += ArticuloDetalle.Precio * ArticuloDetalle.Cantidad;
             Detalles = new ComboDetalles();
             await Task.CompletedTask;
-            Toast.Notify(new(ToastType.Success, $"Se agrego el componente correctamente"));
+            Toast.Notify(new(ToastType.Success, $"Se agrego el componente correctamente"));  
 
         }
     }
